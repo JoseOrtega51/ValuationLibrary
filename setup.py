@@ -5,7 +5,10 @@ import pybind11
 source_files = [
     "src/main.cpp",
     "src/calculator.cpp",
-    "src/advanced_calculator.cpp"
+    "src/advanced_calculator.cpp",
+    "src/ValuationMathTools.cpp",
+    "src/FinancialDerivative.cpp",
+    "src/EuropeanOption.cpp"
 ]
 
 ext_modules = [
