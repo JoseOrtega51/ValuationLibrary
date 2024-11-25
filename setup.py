@@ -4,7 +4,6 @@ import pybind11
 # Lista de archivos .cpp que conforman el proyecto
 source_files = [
     "src/main.cpp",
-    "src/calculator.cpp",
     "src/advanced_calculator.cpp",
     "src/ValuationMathTools.cpp",
     "src/FinancialDerivative.cpp",
