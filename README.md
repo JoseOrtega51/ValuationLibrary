@@ -43,6 +43,6 @@ plt.show()
 
 ```
 
-![Price](https://github.com/JoseOrtega51/ValuationLibrary/readme_files/straddle.png)
+![Price](https://github.com/JoseOrtega51/ValuationLibrary/blob/main/readme_files/straddle.png)
 
 The library is still under construction and for now it only allows Black Scholes pricing and European options. However, the use of portfolios allows to recreate many complex strategies.
