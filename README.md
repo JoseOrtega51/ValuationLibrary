@@ -1,11 +1,11 @@
-import ValuationLibrary as ValLry
-import numpy as np
-import matplotlib.pyplot as plt
+### Valuation Library
 
+Python library compiled in C++ to work with financial instruments and portfolios in an OOP style that mimics trading (in a didactic and naive way). You may configure options with their characteristics, choose a pricing model and set up a portfolio which you can price at once. This gives valuable insight about trading strategies.
+
+```python
 
 #Define a strategy portfolio
 Straddle = ValLry.portfolio()
-
 
 ################## CREATE STRADDLE ####################################
 
@@ -35,18 +35,14 @@ print(portfolioList)
 
 #####################################################################
 
-# Price the straddle
+# Price the straddle at time t = 0.8
 S = np.linspace(0., 200., 100)
-Value_straddle = Straddle.price(0.8,S)
+Value_straddle = Straddle.price(0.99,S)
 plt.plot(S,Value_straddle)
 plt.show()
 
-# Create new big portfolio
-book = ValLry.portfolio()
+```
 
-book.shortInstrument("Stradle", Straddle)
+![Price](https://github.com/JoseOrtega51/ValuationLibrary/readme_files/straddle.png)
 
-S = np.linspace(0., 200., 100)
-Value_book = book.price(0.99,S)
-plt.plot(S,Value_book)
-plt.show()
+The library is still under construction and for now it only allows Black Scholes pricing and European options. However, the use of portfolios allows to recreate many complex strategies.
