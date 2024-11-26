@@ -16,6 +16,8 @@ namespace ValLry{
             Position _BookPosition;  //Short or Long
 
         public:
+            //Price the instrument according to its configuration. It needs to be defined in each inherited class.
+            virtual double price(const double t, const double S) = 0;
             //getters
 
             //get value of MTM

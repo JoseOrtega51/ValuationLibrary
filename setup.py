@@ -8,7 +8,8 @@ source_files = [
     "src/ValuationMathTools.cpp",
     "src/FinancialInstrument.cpp",
     "src/EuropeanOption.cpp",
-    "src/Portfolio.cpp"
+    "src/Portfolio.cpp",
+    "src/python_utils.cpp"
 ]
 
 ext_modules = [

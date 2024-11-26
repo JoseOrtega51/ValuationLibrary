@@ -4,6 +4,8 @@
 #include "FinancialInstrument.h"
 #include "ValuationMathTools.h"
 #include <algorithm>
+#include<stdexcept>
+#include "python_utils.h"
 
 namespace ValLry{
 
@@ -34,6 +36,10 @@ namespace ValLry{
 
             //Price the option according to BSM model for time t and underlying price S
             double price(const double t, const double S);
+
+            //Overload price function for numpy arrays
+            py::array_t<double> price(const py::array_t<double> t, const double S);
+            py::array_t<double> price(const double t, const py::array_t<double> S);
     };
 
     class EuropeanOption : public FinancialInstrument{
@@ -56,7 +62,7 @@ namespace ValLry{
             EuropeanOption(OptionType type, double strike, double expiry);
 
             // Price the option with the default model
-            double price(const double t, const double S);
+            double price(const double t, const double S) override;
 
             //BSM model
             BSM_EuropeanOption BSM;
@@ -68,6 +74,8 @@ namespace ValLry{
 
             //get value of _model
             void getPricingModel(PricingModel &model);
+            //get value of _expiry
+            double getExpiry();
 
             //setters
 

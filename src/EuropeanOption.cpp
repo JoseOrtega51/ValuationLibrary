@@ -1,4 +1,3 @@
-#include<stdexcept>
 #include "EuropeanOption.h"
 namespace ValLry{
 
@@ -52,6 +51,10 @@ namespace ValLry{
         model = _model;
     }
 
+    double EuropeanOption::getExpiry(){
+        return _expiry;
+    }
+
     void EuropeanOption::setPricingModel(const PricingModel &model){
         _model = model;
         _default_model_especified = true;
@@ -66,9 +69,17 @@ namespace ValLry{
             double K = _option->_strike;
             double expiry = _option->_expiry;
             OptionType type = _option->_type;
+            double tau = expiry - t;
+
+
+            //TODO: Include this conditions in an independent function.
+            //Check if t is valid
+            if(t < 0.)      throw(std::runtime_error("Date t cannot be negative!"));
+            if(tau < 0.)    throw(std::runtime_error("Date t cannot be posterior to expiry!"));
+            //Check if S is valid 
+            if(S < 0.)      throw(std::runtime_error("Price S cannot be negative in BSM!"));
 
             double NPV = 0.;
-            double tau = expiry - t;
             double dp = 1/_vol/sqrt(tau)*(log(S/K)+(_r+_vol*_vol/2)*tau);
             double dm = 1/_vol/sqrt(tau)*(log(S/K)+(_r-_vol*_vol/2)*tau);
             switch (type)
@@ -90,6 +101,34 @@ namespace ValLry{
             double NPV = -1;
             return NPV;
         }
+    }
+
+    py::array_t<double> BSM_EuropeanOption::price(const py::array_t<double> t, const double S){
+
+        auto input_vector = numpy2vector(t);
+        // Crear un nuevo vector para la salida
+        auto output_vector = std::make_shared<std::vector<double>>(input_vector->size());
+
+        for (size_t i = 0; i < input_vector->size(); ++i) {
+            (*output_vector)[i] = price(input_vector->at(i),S);
+        }
+
+        auto result = vector2numpy(output_vector);
+        return result;
+    }
+
+
+    py::array_t<double> BSM_EuropeanOption::price(const double t, const py::array_t<double> S){
+        auto input_vector = numpy2vector(S);
+        // Crear un nuevo vector para la salida
+        auto output_vector = std::make_shared<std::vector<double>>(input_vector->size());
+
+        for (size_t i = 0; i < input_vector->size(); ++i) {
+            (*output_vector)[i] = price(t, input_vector->at(i));
+        }
+
+        auto result = vector2numpy(output_vector);
+        return result;
     }
 
     void BSM_EuropeanOption::setup(const double vol, const double r){

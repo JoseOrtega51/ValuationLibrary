@@ -1,6 +1,14 @@
 #include "Portfolio.h"
 namespace ValLry{
 
+    double portfolio::price(const double t, const double S){
+        double price = 0;
+        for(auto &instrument : _composition){
+            price +=instrument.second->price(t,S);
+        }
+        return price;
+    }
+
     void portfolio::addInstrument(std::string label, const std::shared_ptr<FinancialInstrument> &instrument){
         if(_composition.find(label)==_composition.end()){
             _label_list.insert(label);
