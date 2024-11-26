@@ -7,10 +7,9 @@ vol = 0.2
 r = 0.02
 
 #Define a strategy portfolio
-Straddle = ValLry.portfolio()
+BFS = ValLry.portfolio()
 
-
-################## CREATE STRADDLE ####################################
+################## CREATE BUTTERFLY SPREAD ####################################
 dK = 10.
 K0 = 100.
 
@@ -21,7 +20,7 @@ i = 0
 for K in strikes:
 
     #Define a European Option
-    OpcionCall = ValLry.EuropeanOption(ValLry.OptionType.PUT,K, 1.)
+    OpcionCall = ValLry.EuropeanOption(ValLry.OptionType.CALL,K, 1.)
 
     #set the default model
     OpcionCall.BSM.setup(vol, r)
@@ -29,9 +28,9 @@ for K in strikes:
 
     #Add option to portfolio
     if(positions[i] == 'L'):
-        Straddle.longInstrument("Option_{}".format(i), OpcionCall)
+        BFS.longInstrument("Option_{}".format(i), OpcionCall)
     else:
-        Straddle.shortInstrument("Option_{}".format(i), OpcionCall)
+        BFS.shortInstrument("Option_{}".format(i), OpcionCall)
 
     i += 1
 
@@ -39,13 +38,13 @@ for K in strikes:
 
 # Payoff butterfly spread
 S = np.linspace(K0 - 2 * dK, K0 + 2 * dK, 100)
-Value_straddle = Straddle.price(1.,S)
+Value_straddle = BFS.price(1.,S)
 plt.plot(S,Value_straddle)
 plt.show()
 
 # Price butterfly spread
-Value_straddle = Straddle.price(0.,S)
+Value_straddle = BFS.price(0.,S)
 plt.plot(S,Value_straddle)
 plt.show()
 
-print("d2C/dK2 =(aprox)= {}".format(Straddle.price(0.,K0)/(dK)**2))
+print("d2C/dK2 =(aprox)= {}".format(BFS.price(0.,K0)/(dK)**2))

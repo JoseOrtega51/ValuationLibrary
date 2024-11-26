@@ -33,6 +33,7 @@ namespace ValLry{
             break;
         case OptionType::PUT:
             payoff_in_S = std::max(_strike-S,0.);
+            break;
         default:
             throw(std::runtime_error("Option Type is not valid!"));
             break;
