@@ -65,10 +65,10 @@ namespace ValLry{
             double price(const double t, const double S) override;
 
             // Price the option with the default model in an array of time instants
-            py::array_t<double> EuropeanOption:: price(const py::array_t<double> t, const double S)  override;
+            py::array_t<double> price(const py::array_t<double> t, const double S)  override;
 
             // Price the option with the default model in an array of prices
-            py::array_t<double> EuropeanOption:: price(const double t, const py::array_t<double> S)  override;
+            py::array_t<double> price(const double t, const py::array_t<double> S)  override;
 
             // template definition for the main pricing function
             template<typename out_type, typename t_type, typename S_type>
