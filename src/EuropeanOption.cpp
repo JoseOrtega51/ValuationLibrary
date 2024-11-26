@@ -10,23 +10,17 @@ namespace ValLry{
     }
 
     double EuropeanOption::price(const double t, const double S){
-        double price = -1;
-        if(_default_model_especified){
-        switch (_model)
-        {
-        case PricingModel::BLACK_SCHOLES:
-            price = BSM.price(t,S);
-            break;
-        case PricingModel::BINOMIAL:
-            throw(std::runtime_error("Model is not implemented yet"));
-            break;
-        default:
-            throw(std::runtime_error("Model is not valid"));
-            break;
-        }
-        }else{
-            throw(std::runtime_error("Default model has not been specified!"));
-        }
+        double price = internal_price<double, double, double>(t,S);
+        return price;
+    }
+
+    py::array_t<double> EuropeanOption::price(const py::array_t<double> t, const double S){
+        py::array_t<double> price = internal_price<py::array_t<double>, const py::array_t<double>, double>(t,S);
+        return price;
+    }
+
+    py::array_t<double> EuropeanOption::price(const double t, const py::array_t<double> S){
+        py::array_t<double> price = internal_price<py::array_t<double>, double, const py::array_t<double>>(t,S);
         return price;
     }
 

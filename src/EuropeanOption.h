@@ -61,8 +61,38 @@ namespace ValLry{
 
             EuropeanOption(OptionType type, double strike, double expiry);
 
-            // Price the option with the default model
+             // Price the option with the default model in a single point
             double price(const double t, const double S) override;
+
+            // Price the option with the default model in an array of time instants
+            py::array_t<double> EuropeanOption:: price(const py::array_t<double> t, const double S)  override;
+
+            // Price the option with the default model in an array of prices
+            py::array_t<double> EuropeanOption:: price(const double t, const py::array_t<double> S)  override;
+
+            // template definition for the main pricing function
+            template<typename out_type, typename t_type, typename S_type>
+            out_type internal_price(t_type t, S_type S){
+                out_type price;
+                if(_default_model_especified){
+                switch (_model)
+                {
+                case PricingModel::BLACK_SCHOLES:
+                    price = BSM.price(t,S);
+                    break;
+                case PricingModel::BINOMIAL:
+                    throw(std::runtime_error("Model is not implemented yet"));
+                    break;
+                default:
+                    throw(std::runtime_error("Model is not valid"));
+                    break;
+                }
+                }else{
+                    throw(std::runtime_error("Default model has not been specified!"));
+                }
+                return price;
+            }
+           
 
             //BSM model
             BSM_EuropeanOption BSM;
@@ -81,8 +111,6 @@ namespace ValLry{
 
             //set value of _model
             void setPricingModel(const PricingModel &model);
-
-
     };
 
     

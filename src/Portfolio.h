@@ -10,9 +10,9 @@
 #include <memory>
 #include"FinancialInstrument.h"
 
-namespace ValLry{
+namespace ValLry {
 
-    class portfolio{
+    class portfolio : public FinancialInstrument{
         private:
             std::map<std::string, std::shared_ptr<FinancialInstrument>>  _composition;
             std::set<std::string>                    _label_list;
@@ -20,6 +20,8 @@ namespace ValLry{
         public:
             //Compute price of whole portfolio
             double price(const double t, const double S);
+            py::array_t<double> price(const py::array_t<double> t, const double S);
+            py::array_t<double> price(const double t, const py::array_t<double> S);
 
             void addInstrument(std::string label, const std::shared_ptr<FinancialInstrument> &instrument);
             void eraseInstrument(const std::string label);

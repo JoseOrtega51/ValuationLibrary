@@ -1,6 +1,8 @@
 #ifndef FINANCIAL_INSTRUMENT_H
 #define FINANCIAL_INSTRUMENT_H
 
+#include "python_utils.h"
+
 namespace ValLry{
 
     enum class Position{
@@ -17,7 +19,10 @@ namespace ValLry{
 
         public:
             //Price the instrument according to its configuration. It needs to be defined in each inherited class.
-            virtual double price(const double t, const double S) = 0;
+            virtual double price(const double t, const double S)                = 0;
+            virtual py::array_t<double> price(const py::array_t<double> t, const double S)   = 0;
+            virtual py::array_t<double> price(const double t, const py::array_t<double> S)   = 0;
+
             //getters
 
             //get value of MTM
