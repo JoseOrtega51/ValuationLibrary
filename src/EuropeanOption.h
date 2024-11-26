@@ -1,8 +1,9 @@
 #ifndef EUROPEAN_OPTION
 #define EUROPEAN_OPTION
 
-#include "FinancialDerivative.h"
+#include "FinancialInstrument.h"
 #include "ValuationMathTools.h"
+#include <algorithm>
 
 namespace ValLry{
 
@@ -16,18 +17,6 @@ namespace ValLry{
         BINOMIAL
     };
 
-    // class EuropeanOptionSolver{
-    //     private:
-    //         OptionType      _type;
-    //         double          _strike;
-    //         double          _expiry;
-
-    //     public:
-    //         EuropeanOptionSolver(){};
-    //         EuropeanOptionSolver(OptionType type, double strike, double expiry);
-    //         double BlackScholes(const OptionType &type, double K, double expiry, double S, double t, double sigma, double r);
-    // };
-
     class EuropeanOption;
 
     class BSM_EuropeanOption {
@@ -35,6 +24,7 @@ namespace ValLry{
             EuropeanOption* _option;    //EuropeanOption class that contains this BSM_EuropeanOption
             double          _r;         //risk free rate
             double          _vol;       //volatility
+            bool            _set_up = false;   //Has the model been set up?
         public:
             //class constructor
             explicit BSM_EuropeanOption(EuropeanOption* option);
@@ -46,12 +36,14 @@ namespace ValLry{
             double price(const double t, const double S);
     };
 
-    class EuropeanOption : FinancialDerivative{
+    class EuropeanOption : public FinancialInstrument{
         private:
             OptionType      _type;
             PricingModel    _model;
             double          _strike;
             double          _expiry;
+
+            bool            _default_model_especified = false;  //Has the default pricing model been specified?
 
             friend class BSM_EuropeanOption;
             
@@ -59,12 +51,18 @@ namespace ValLry{
 
             //EuropeanOptionSolver _solver;
             //Constructor
-            double BlackScholes(const OptionType &type, double K, double expiry, double S, double t, double sigma, double r);
             //EuropeanOption(){};
-            EuropeanOption(OptionType type, PricingModel model, double strike, double expiry);
 
+            EuropeanOption(OptionType type, double strike, double expiry);
 
+            // Price the option with the default model
+            double price(const double t, const double S);
+
+            //BSM model
             BSM_EuropeanOption BSM;
+
+            //Payoff funcion
+            double payoff(double S);
 
             //getters
 

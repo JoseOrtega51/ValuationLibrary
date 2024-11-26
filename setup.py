@@ -6,8 +6,9 @@ source_files = [
     "src/main.cpp",
     "src/advanced_calculator.cpp",
     "src/ValuationMathTools.cpp",
-    "src/FinancialDerivative.cpp",
-    "src/EuropeanOption.cpp"
+    "src/FinancialInstrument.cpp",
+    "src/EuropeanOption.cpp",
+    "src/Portfolio.cpp"
 ]
 
 ext_modules = [

@@ -1,5 +1,5 @@
-#ifndef FINANCIAL_DERIVATIVE_H
-#define FINANCIAL_DERIVATIVE_H
+#ifndef FINANCIAL_INSTRUMENT_H
+#define FINANCIAL_INSTRUMENT_H
 
 namespace ValLry{
 
@@ -8,7 +8,7 @@ namespace ValLry{
         SHORT
     };
 
-    class FinancialDerivative{
+    class FinancialInstrument{
         private:
 
             double _MTM; //Market Price
