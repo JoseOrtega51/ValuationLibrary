@@ -1,7 +1,6 @@
 // src/main.cpp
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
-#include "advanced_calculator.h"
 #include "operations.h"
 #include "EuropeanOption.h"
 #include "Portfolio.h"
