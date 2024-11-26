@@ -24,5 +24,6 @@ namespace ValLry{
 
     void FinancialInstrument::setBookPosition(const Position &BookPosition){
         _BookPosition = BookPosition;
+        _isPositionDefined = true;
     }
 }

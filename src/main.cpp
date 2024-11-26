@@ -45,12 +45,14 @@ PYBIND11_MODULE(ValuationLibrary, m) {
         .def_readonly("BSM", &ValLry::EuropeanOption::BSM); 
 
     //Portfolio
-     py::class_<ValLry::portfolio>(m, "portfolio")
+     py::class_<ValLry::portfolio, ValLry::FinancialInstrument, std::shared_ptr<ValLry::portfolio>>(m, "portfolio")
         .def(py::init<>())
         .def("price", py::overload_cast<const double, const double>(&ValLry::portfolio::price), "price function that takes double as t and S")
         .def("price", py::overload_cast<const py::array_t<double>, const double>(&ValLry::portfolio::price),"price fuction that takes numpy array as t")
         .def("price", py::overload_cast<const double, const py::array_t<double>>(&ValLry::portfolio::price),"price fuction that takes numpy array as S")
         .def("addInstrument", &ValLry::portfolio::addInstrument)
+        .def("longInstrument", &ValLry::portfolio::longInstrument)
+        .def("shortInstrument", &ValLry::portfolio::shortInstrument)
         .def("eraseInstrument", &ValLry::portfolio::eraseInstrument)
         .def("getLabelList", &ValLry::portfolio::getLabelList);
 }

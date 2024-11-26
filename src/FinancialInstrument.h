@@ -15,7 +15,10 @@ namespace ValLry{
 
             double _MTM; //Market Price
             double _NPV; //Computed price
+
+        protected:
             Position _BookPosition;  //Short or Long
+            bool _isPositionDefined = false;
 
         public:
             //Price the instrument according to its configuration. It needs to be defined in each inherited class.
