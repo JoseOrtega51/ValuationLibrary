@@ -73,8 +73,11 @@ namespace ValLry{
             // template definition for the main pricing function
             template<typename out_type, typename t_type, typename S_type>
             out_type internal_price(t_type t, S_type S){
+
+                if(!_isPositionDefined){throw(std::runtime_error("Position in portfolio has not been set up!\n"));}
+                if(!_default_model_especified){throw(std::runtime_error("Default model has not been specified!"));}
+
                 out_type price;
-                if(_default_model_especified){
                 switch (_model)
                 {
                 case PricingModel::BLACK_SCHOLES:
@@ -87,9 +90,12 @@ namespace ValLry{
                     throw(std::runtime_error("Model is not valid"));
                     break;
                 }
-                }else{
-                    throw(std::runtime_error("Default model has not been specified!"));
+
+                //If we are shorting the instrument, its value is multiplied by -1
+                if(_BookPosition == Position::SHORT){
+                    price = -price;
                 }
+                    
                 return price;
             }
            

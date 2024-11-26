@@ -24,6 +24,8 @@ namespace ValLry {
             py::array_t<double> price(const double t, const py::array_t<double> S);
 
             void addInstrument(std::string label, const std::shared_ptr<FinancialInstrument> &instrument);
+            void longInstrument(std::string label, std::shared_ptr<FinancialInstrument> &instrument);
+            void shortInstrument(std::string label, std::shared_ptr<FinancialInstrument> &instrument);
             void eraseInstrument(const std::string label);
             std::set<std::string> getLabelList();
 
