@@ -5,8 +5,6 @@
 
 namespace ValLry{
 
-    #define M_SQRT1_2 sqrt(0.5)
-
     double normalCDF(double value);
     
 }
