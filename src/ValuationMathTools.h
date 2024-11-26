@@ -4,6 +4,9 @@
 #include <math.h>
 
 namespace ValLry{
+    #ifndef M_SQRT1_2
+    #define M_SQRT1_2 sqrt(0.5)
+    #endif
 
     double normalCDF(double value);
     
