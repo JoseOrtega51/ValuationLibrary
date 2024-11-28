@@ -8,7 +8,9 @@ source_files = [
     "src/FinancialInstrument.cpp",
     "src/EuropeanOption.cpp",
     "src/Portfolio.cpp",
-    "src/python_utils.cpp"
+    "src/python_utils.cpp",
+    "src/MoneyMarket.cpp",
+    "src/MarketModel.cpp"
 ]
 
 ext_modules = [
