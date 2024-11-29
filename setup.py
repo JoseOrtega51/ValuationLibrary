@@ -10,7 +10,8 @@ source_files = [
     "src/Portfolio.cpp",
     "src/python_utils.cpp",
     "src/MoneyMarket.cpp",
-    "src/MarketModel.cpp"
+    "src/MarketModel.cpp",
+    "src/IRCurve.cpp"
 ]
 
 ext_modules = [
