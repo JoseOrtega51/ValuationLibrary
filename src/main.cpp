@@ -6,6 +6,7 @@
 #include "Portfolio.h"
 #include "MarketModel.h"
 #include "IRCurve.h"
+#include "FixedIncome.h"
 
 namespace py = pybind11;
 
