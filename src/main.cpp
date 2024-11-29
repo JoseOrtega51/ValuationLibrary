@@ -4,6 +4,8 @@
 #include "operations.h"
 #include "EuropeanOption.h"
 #include "Portfolio.h"
+#include "MarketModel.h"
+#include "IRCurve.h"
 
 namespace py = pybind11;
 
@@ -54,4 +56,15 @@ PYBIND11_MODULE(ValuationLibrary, m) {
         .def("shortInstrument", &ValLry::portfolio::shortInstrument)
         .def("eraseInstrument", &ValLry::portfolio::eraseInstrument)
         .def("getLabelList", &ValLry::portfolio::getLabelList);
+
+    py::class_<ValLry::IRCurve, std::shared_ptr<ValLry::IRCurve>>(m, "IRCurve")
+        .def(py::init<const py::array_t<double>&,const py::array_t<double>&>(), py::arg("bucket"), py::arg("rates"))
+        .def("getValue",py::overload_cast<const py::array_t<double>&>( &ValLry::IRCurve::getValue), "Cubic spline of IR curve for a point")
+        .def("getValue",py::overload_cast<double> (&ValLry::IRCurve::getValue),"Cubic spline of IR curve for a point");
+
+    py::class_<ValLry::MarketModel, std::shared_ptr<ValLry::MarketModel>>(m, "MarketModel")
+        .def(py::init<>())
+        .def("addIRCurve", &ValLry::MarketModel::addIRCurve)
+        .def("eraseIRCurve", &ValLry::MarketModel::eraseIRCurve)
+        .def("getIRCurvesList", &ValLry::MarketModel::getIRCurvesList);
 }

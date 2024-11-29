@@ -1,29 +1,26 @@
 #ifndef MARKET_MODEL_H
 #define MARKET_MODEL_H
 
-#include <vector>
-#include <deque>
+#include "IRCurve.h"
 #include "ValuationMathTools.h"
+#include <map>
+#include <set>
 
 namespace ValLry{
-    class IRCurve {
-        public:
-            std::vector<double> _buckets;
-            std::vector<double> _rates;
-            std::deque<double> _spline3_coefs;
-
-            IRCurve(std::vector<double> buckets, std::vector<double> rates);
-
-            double getValue(double t);
-    };
-
+   
     class MarketModel {
         private:
             double _risk_free_rate;
-            IRCurve _risk_free_curve; //rate[tenor]
+            std::map<std::string, IRCurve> _IRCurves_map;    //IRCurve[id_curve]
+            std::set<std::string> _IRCurves_list;        //id_curve
 
         public:
             double getRiskFreeRate( double t );
+
+            //IR Curves
+            void addIRCurve(const std::string &id_curve, const IRCurve &curve);
+            void eraseIRCurve(const std::string &id_curve);
+            std::set<std::string> getIRCurvesList();
     };
 }
 #endif
