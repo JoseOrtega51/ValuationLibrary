@@ -65,6 +65,73 @@ namespace ValLry{
         return price_np;
     }
 
+
+    //// DELTA
+
+
+    double portfolio::delta(const double t, const double S){
+        double delta = 0;
+        for(auto &instrument : _composition){
+            delta +=instrument.second->delta(t,S);
+        }
+        
+        if(_isPositionDefined){ //We do not always need the our portfolio has a position, only when is a portfolio in other portfolio
+            //If we are shorting the portfolio, its value is multiplied by -1
+            if(_BookPosition == Position::SHORT){
+                delta = -delta;
+            }
+        }
+        return delta;
+    }
+
+    py::array_t<double> portfolio::delta(const py::array_t<double> t, const double S){
+        std::shared_ptr<std::vector<double>> delta;
+        auto t_vector = numpy2vector(t);
+        for(auto &instrument : _composition){
+            py::array_t<double> delta_ins = instrument.second->delta(t,S);
+            auto delta_ins_vector = numpy2vector(delta_ins);
+            for (size_t i = 0; i < t_vector->size(); ++i) {
+                (*delta)[i] += delta_ins_vector->at(i);
+            }
+
+            if(_isPositionDefined){ //We do not always need the our portfolio has a position, only when is a portfolio in other portfolio
+                for (size_t i = 0; i < t_vector->size(); ++i) {
+                    //If we are shorting the portfolio, its value is multiplied by -1
+                    if(_BookPosition == Position::SHORT){
+                        (*delta)[i]*=(-1);
+                    }
+                }
+            }
+        }
+        
+        auto delta_np = vector2numpy(delta);
+        return delta_np;
+    }
+    
+    py::array_t<double> portfolio::delta(const double t, const py::array_t<double> S){
+        std::vector<double> delta;
+        std::shared_ptr<std::vector<double>> S_vector = numpy2vector(S);
+        for (size_t i = 0; i < S_vector->size(); ++i) {delta.push_back(0.0);}
+        for(auto &instrument : _composition){
+            py::array_t<double> delta_ins = instrument.second->delta(t,S);
+            auto delta_ins_vector = numpy2vector(delta_ins);
+            for (size_t i = 0; i < S_vector->size(); ++i) {
+                delta[i] += delta_ins_vector->at(i);
+            }
+        }
+        if(_isPositionDefined){ //We do not always need the our portfolio has a position, only when is a portfolio in other portfolio
+            for (size_t i = 0; i < S_vector->size(); ++i) {
+                //If we are shorting the portfolio, its value is multiplied by -1
+                if(_BookPosition == Position::SHORT){
+                    delta[i]*=(-1);
+                }
+            }
+        }
+        std::shared_ptr<std::vector<double>> delta_ptr = std::make_shared<std::vector<double>>(delta);
+        py::array_t<double> delta_np = vector2numpy(delta_ptr);
+        return delta_np;
+    }
+
     void portfolio::addInstrument(std::string label, const std::shared_ptr<FinancialInstrument> &instrument){
         if(_composition.find(label)==_composition.end()){
             _label_list.insert(label);

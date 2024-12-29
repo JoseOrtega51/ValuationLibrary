@@ -23,6 +23,11 @@ namespace ValLry {
             py::array_t<double> price(const py::array_t<double> t, const double S);
             py::array_t<double> price(const double t, const py::array_t<double> S);
 
+            //Compute the delta of whole portfolio
+            double delta(const double t, const double S);
+            py::array_t<double> delta(const py::array_t<double> t, const double S);
+            py::array_t<double> delta(const double t, const py::array_t<double> S);
+
             void addInstrument(std::string label, const std::shared_ptr<FinancialInstrument> &instrument);
             void longInstrument(std::string label, std::shared_ptr<FinancialInstrument> &instrument);
             void shortInstrument(std::string label, std::shared_ptr<FinancialInstrument> &instrument);

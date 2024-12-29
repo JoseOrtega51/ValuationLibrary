@@ -9,6 +9,8 @@ namespace ValLry{
         : _type(type), _strike(strike), _expiry(expiry), BSM(this){
     }
 
+    /// PRICE
+
     double EuropeanOption::price(const double t, const double S){
         double price = internal_price<double, double, double>(t,S);
         return price;
@@ -21,6 +23,23 @@ namespace ValLry{
 
     py::array_t<double> EuropeanOption::price(const double t, const py::array_t<double> S){
         py::array_t<double> price = internal_price<py::array_t<double>, double, const py::array_t<double>>(t,S);
+        return price;
+    }
+
+    /// DELTA    
+
+    double EuropeanOption::delta(const double t, const double S){
+        double price = internal_delta<double, double, double>(t,S);
+        return price;
+    }
+
+    py::array_t<double> EuropeanOption::delta(const py::array_t<double> t, const double S){
+        py::array_t<double> price = internal_delta<py::array_t<double>, const py::array_t<double>, double>(t,S);
+        return price;
+    }
+
+    py::array_t<double> EuropeanOption::delta(const double t, const py::array_t<double> S){
+        py::array_t<double> price = internal_delta<py::array_t<double>, double, const py::array_t<double>>(t,S);
         return price;
     }
 
@@ -134,7 +153,71 @@ namespace ValLry{
 
     BSM_EuropeanOption::BSM_EuropeanOption(EuropeanOption* option) : _option(option){}
 
-    
+    double BSM_EuropeanOption::delta(const double t, const double S){
+        if(_set_up){
+            double K = _option->_strike;
+            double expiry = _option->_expiry;
+            OptionType type = _option->_type;
+            double tau = expiry - t;
+
+
+            //TODO: Include this conditions in an independent function.
+            //Check if t is valid
+            if(t < 0.)      throw(std::runtime_error("Date t cannot be negative!"));
+            if(tau < 0.)    throw(std::runtime_error("Date t cannot be posterior to expiry!"));
+            //Check if S is valid 
+            if(S < 0.)      throw(std::runtime_error("Price S cannot be negative in BSM!"));
+
+            double delta = 0.;
+            double dp = 1/_vol/sqrt(tau)*(log(S/K)+(_r+_vol*_vol/2)*tau);
+            switch (type)
+            {
+            case OptionType::CALL:
+                delta = normalCDF(dp);
+                break;
+            case OptionType::PUT:
+                delta = normalCDF(dp) - 1;
+                break;
+            default:
+                throw(std::runtime_error("OptionType not defined!\n"));
+                break;
+            }
+            _option->setNPV(delta);
+            return delta;
+        }else{
+            throw(std::runtime_error("Model has not been set up!\n"));
+            double delta = -1;
+            return delta;
+        }
+    }
+
+    py::array_t<double> BSM_EuropeanOption::delta(const py::array_t<double> t, const double S){
+
+        auto input_vector = numpy2vector(t);
+        // Crear un nuevo vector para la salida
+        auto output_vector = std::make_shared<std::vector<double>>(input_vector->size());
+
+        for (size_t i = 0; i < input_vector->size(); ++i) {
+            (*output_vector)[i] = delta(input_vector->at(i),S);
+        }
+
+        auto result = vector2numpy(output_vector);
+        return result;
+    }
+
+
+    py::array_t<double> BSM_EuropeanOption::delta(const double t, const py::array_t<double> S){
+        auto input_vector = numpy2vector(S);
+        // Crear un nuevo vector para la salida
+        auto output_vector = std::make_shared<std::vector<double>>(input_vector->size());
+
+        for (size_t i = 0; i < input_vector->size(); ++i) {
+            (*output_vector)[i] = delta(t, input_vector->at(i));
+        }
+
+        auto result = vector2numpy(output_vector);
+        return result;
+    }
 
 
    

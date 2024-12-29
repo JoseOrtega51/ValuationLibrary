@@ -40,6 +40,12 @@ namespace ValLry{
             //Overload price function for numpy arrays
             py::array_t<double> price(const py::array_t<double> t, const double S);
             py::array_t<double> price(const double t, const py::array_t<double> S);
+
+            //delta of the option according to BSM model for time t and underlying price S
+            double delta(const double t, const double S);
+            //Overload delta function for numpy arrays
+            py::array_t<double> delta(const py::array_t<double> t, const double S);
+            py::array_t<double> delta(const double t, const py::array_t<double> S);
     };
 
     class EuropeanOption : public FinancialInstrument{
@@ -60,6 +66,10 @@ namespace ValLry{
             //EuropeanOption(){};
 
             EuropeanOption(OptionType type, double strike, double expiry);
+
+            //////////////////////////////////////////
+            /// PRICE
+            //////////////////////////////////////////
 
              // Price the option with the default model in a single point
             double price(const double t, const double S) override;
@@ -98,7 +108,48 @@ namespace ValLry{
                     
                 return price;
             }
+
+            //////////////////////////////////////////
+            /// DELTA
+            //////////////////////////////////////////
            
+            // Delta of the option with the default model in a single point
+            double delta(const double t, const double S) override;
+
+            // Delta of the option with the default model in an array of time instants
+            py::array_t<double> delta(const py::array_t<double> t, const double S) override;
+
+            // Delta of the option with the default model in an array of prices
+            py::array_t<double> delta(const double t, const py::array_t<double> S) override;
+
+            // template definition for the main delta function
+            template<typename out_type, typename t_type, typename S_type>
+            out_type internal_delta(t_type t, S_type S){
+
+                if(!_isPositionDefined){throw(std::runtime_error("Position in portfolio has not been set up!\n"));}
+                if(!_default_model_especified){throw(std::runtime_error("Default model has not been specified!"));}
+
+                out_type delta;
+                switch (_model)
+                {
+                case PricingModel::BLACK_SCHOLES:
+                    delta = BSM.delta(t,S);
+                    break;
+                case PricingModel::BINOMIAL:
+                    throw(std::runtime_error("Model is not implemented yet"));
+                    break;
+                default:
+                    throw(std::runtime_error("Model is not valid"));
+                    break;
+                }
+
+                //If we are shorting the instrument, its value is multiplied by -1
+                if(_BookPosition == Position::SHORT){
+                    delta = -delta;
+                }
+                    
+                return delta;
+            }
 
             //BSM model
             BSM_EuropeanOption BSM;

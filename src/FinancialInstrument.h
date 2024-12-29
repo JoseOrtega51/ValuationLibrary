@@ -26,6 +26,11 @@ namespace ValLry{
             virtual py::array_t<double> price(const py::array_t<double> t, const double S)   = 0;
             virtual py::array_t<double> price(const double t, const py::array_t<double> S)   = 0;
 
+            //Price the instrument according to its configuration. It needs to be defined in each inherited class.
+            virtual double delta(const double t, const double S)                = 0;
+            virtual py::array_t<double> delta(const py::array_t<double> t, const double S)   = 0;
+            virtual py::array_t<double> delta(const double t, const py::array_t<double> S)   = 0;
+
             //getters
 
             //get value of MTM

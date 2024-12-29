@@ -48,3 +48,10 @@ plt.plot(S,Value_straddle)
 plt.show()
 
 print("d2C/dK2 =(aprox)= {}".format(BFS.price(0.,K0)/(dK)**2))
+
+#####################################################################
+
+# Delta butterfly spread
+Value_straddle = BFS.delta(0.,S)
+plt.plot(S,Value_straddle)
+plt.show()
