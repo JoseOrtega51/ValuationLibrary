@@ -16,6 +16,8 @@ namespace ValLry {
         private:
             std::map<std::string, std::shared_ptr<FinancialInstrument>>  _composition;
             std::set<std::string>                    _label_list;
+
+            bool _base_instrument = false; //True if the instrument is a base instrument (e.g. stock, bond, option, etc.)
         
         public:
             //Compute price of whole portfolio

@@ -57,6 +57,8 @@ namespace ValLry{
 
             bool            _default_model_especified = false;  //Has the default pricing model been specified?
 
+            bool _base_instrument = true; //True if the instrument is a base instrument (e.g. stock, bond, option, etc.)
+
             friend class BSM_EuropeanOption;
             
         public:

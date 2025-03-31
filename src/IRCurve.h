@@ -11,6 +11,7 @@ namespace ValLry{
 
      class IRCurve {
         public:
+            // TODO: Rename buckets with tenors
             std::vector<double> _buckets;
             std::vector<double> _rates;
             std::deque<double> _spline3_coefs;

@@ -15,6 +15,8 @@ namespace ValLry{
 
             double _MTM; //Market Price
             double _NPV; //Computed price
+            bool _base_instrument; //True if the instrument is a base instrument (e.g. stock, bond, option, etc.)   
+            
 
         protected:
             Position _BookPosition;  //Short or Long
@@ -26,10 +28,13 @@ namespace ValLry{
             virtual py::array_t<double> price(const py::array_t<double> t, const double S)   = 0;
             virtual py::array_t<double> price(const double t, const py::array_t<double> S)   = 0;
 
-            //Price the instrument according to its configuration. It needs to be defined in each inherited class.
-            virtual double delta(const double t, const double S)                = 0;
-            virtual py::array_t<double> delta(const py::array_t<double> t, const double S)   = 0;
-            virtual py::array_t<double> delta(const double t, const py::array_t<double> S)   = 0;
+            // //Price the instrument according to its configuration. It needs to be defined in each inherited class.
+            // virtual double delta(const double t, const double S)                = 0;
+            // virtual py::array_t<double> delta(const py::array_t<double> t, const double S)   = 0;
+            // virtual py::array_t<double> delta(const double t, const py::array_t<double> S)   = 0;
+
+            
+
 
             //getters
 

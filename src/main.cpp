@@ -11,7 +11,7 @@
 namespace py = pybind11;
 
 PYBIND11_MODULE(ValuationLibrary, m) {
-
+    /**
     // OptionType
     py::enum_<ValLry::OptionType>(m, "OptionType")
         .value("CALL", ValLry::OptionType::CALL)
@@ -23,10 +23,10 @@ PYBIND11_MODULE(ValuationLibrary, m) {
         .value("BLACK_SCHOLES", ValLry::PricingModel::BLACK_SCHOLES)
         .value("BINOMIAL", ValLry::PricingModel::BINOMIAL)
         .export_values();
-
+    */
     // FinancialInstrument
     py::class_<ValLry::FinancialInstrument, std::shared_ptr<ValLry::FinancialInstrument>>(m, "FinancialInstrument");
-
+    /**
     // EuropeanOption::BSM_EuropeanOption
     py::class_<ValLry::BSM_EuropeanOption>(m, "BSM_EuropeanOption")
         .def("setup", &ValLry::BSM_EuropeanOption::setup)
@@ -48,7 +48,7 @@ PYBIND11_MODULE(ValuationLibrary, m) {
         .def("setPricingModel", &ValLry::EuropeanOption::setPricingModel)
         .def("getPricingModel", &ValLry::EuropeanOption::getPricingModel)
         .def_readonly("BSM", &ValLry::EuropeanOption::BSM); 
-
+    */
     //Portfolio
      py::class_<ValLry::portfolio, ValLry::FinancialInstrument, std::shared_ptr<ValLry::portfolio>>(m, "portfolio")
         .def(py::init<>())
@@ -68,10 +68,11 @@ PYBIND11_MODULE(ValuationLibrary, m) {
         .def(py::init<const py::array_t<double>&,const py::array_t<double>&>(), py::arg("bucket"), py::arg("rates"))
         .def("getValue",py::overload_cast<const py::array_t<double>&>( &ValLry::IRCurve::getValue), "Cubic spline of IR curve for a point")
         .def("getValue",py::overload_cast<double> (&ValLry::IRCurve::getValue),"Cubic spline of IR curve for a point");
-
+    /**
     py::class_<ValLry::MarketModel, std::shared_ptr<ValLry::MarketModel>>(m, "MarketModel")
         .def(py::init<>())
         .def("addIRCurve", &ValLry::MarketModel::addIRCurve)
         .def("eraseIRCurve", &ValLry::MarketModel::eraseIRCurve)
         .def("getIRCurvesList", &ValLry::MarketModel::getIRCurvesList);
+    */
 }
