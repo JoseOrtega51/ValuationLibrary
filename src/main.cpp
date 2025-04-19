@@ -1,12 +1,12 @@
 // src/main.cpp
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
-#include "operations.h"
-#include "EuropeanOption.h"
+//#include "operations.h"
+//#include "EuropeanOption.h"
 #include "Portfolio.h"
-#include "MarketModel.h"
+//#include "MarketModel.h"
 #include "IRCurve.h"
-#include "FixedIncome.h"
+//#include "FixedIncome.h"
 
 namespace py = pybind11;
 
@@ -55,9 +55,9 @@ PYBIND11_MODULE(ValuationLibrary, m) {
         .def("price", py::overload_cast<const double, const double>(&ValLry::portfolio::price), "price function that takes double as t and S")
         .def("price", py::overload_cast<const py::array_t<double>, const double>(&ValLry::portfolio::price),"price fuction that takes numpy array as t")
         .def("price", py::overload_cast<const double, const py::array_t<double>>(&ValLry::portfolio::price),"price fuction that takes numpy array as S")
-        .def("delta", py::overload_cast<const double, const double>(&ValLry::portfolio::delta), "delta function that takes double as t and S")
-        .def("delta", py::overload_cast<const py::array_t<double>, const double>(&ValLry::portfolio::delta),"delta fuction that takes numpy array as t")
-        .def("delta", py::overload_cast<const double, const py::array_t<double>>(&ValLry::portfolio::delta),"delta fuction that takes numpy array as S")
+        // .def("delta", py::overload_cast<const double, const double>(&ValLry::portfolio::delta), "delta function that takes double as t and S")
+        // .def("delta", py::overload_cast<const py::array_t<double>, const double>(&ValLry::portfolio::delta),"delta fuction that takes numpy array as t")
+        // .def("delta", py::overload_cast<const double, const py::array_t<double>>(&ValLry::portfolio::delta),"delta fuction that takes numpy array as S")
         .def("addInstrument", &ValLry::portfolio::addInstrument)
         .def("longInstrument", &ValLry::portfolio::longInstrument)
         .def("shortInstrument", &ValLry::portfolio::shortInstrument)
@@ -65,7 +65,8 @@ PYBIND11_MODULE(ValuationLibrary, m) {
         .def("getLabelList", &ValLry::portfolio::getLabelList);
 
     py::class_<ValLry::IRCurve, std::shared_ptr<ValLry::IRCurve>>(m, "IRCurve")
-        .def(py::init<const py::array_t<double>&,const py::array_t<double>&>(), py::arg("bucket"), py::arg("rates"))
+        .def(py::init<const py::array_t<double>&,const py::array_t<double>&>(), py::arg("bucket"), py::arg("rates"), "Constructor with tenors as double")
+        .def(py::init<const std::vector<std::string>&,const py::array_t<double>&>(), py::arg("bucket"), py::arg("rates"), "Constructor with tenors as string")
         .def("getValue",py::overload_cast<const py::array_t<double>&>( &ValLry::IRCurve::getValue), "Cubic spline of IR curve for a point")
         .def("getValue",py::overload_cast<double> (&ValLry::IRCurve::getValue),"Cubic spline of IR curve for a point");
     /**

@@ -32,4 +32,5 @@ py::array_t<double> vector2numpy(std::shared_ptr<std::vector<double>> output_vec
 
     return result;
 }
-}
+
+} // namespace ValLry

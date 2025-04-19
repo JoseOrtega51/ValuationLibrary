@@ -1,5 +1,50 @@
 #include "ValuationMathTools.h"
 
+/**
+ * @fn double normalCDF(double value)
+ * @brief Computes the cumulative distribution function (CDF) of the standard normal distribution.
+ * @param value The input value for which the CDF is computed.
+ * @return The CDF value for the given input.
+ */
+
+/**
+ * @fn std::deque<double> trisol(int k, const std::vector<double> &a, const std::deque<double> &c, const std::vector<double> &b)
+ * @brief Solves a tridiagonal system of linear equations using the Thomas algorithm.
+ * @param k The size of the system minus one.
+ * @param a The diagonal elements of the tridiagonal matrix.
+ * @param c The sub-diagonal elements of the tridiagonal matrix.
+ * @param b The right-hand side vector.
+ * @return The solution vector of the system.
+ */
+
+/**
+ * @fn std::deque<double> spline3_natural_coefs(const std::vector<double> &x, const std::vector<double> &y)
+ * @brief Computes the coefficients for a natural cubic spline interpolation.
+ * @param x The vector of x-coordinates of the data points.
+ * @param y The vector of y-coordinates of the data points.
+ * @return A deque containing the second derivatives (z-coefficients) of the spline at the data points.
+ */
+
+/**
+ * @fn double spline3_natural_eval(const std::vector<double> &x, const std::vector<double> &y, const std::deque<double> &z, double t)
+ * @brief Evaluates the natural cubic spline at a single point.
+ * @param x The vector of x-coordinates of the data points.
+ * @param y The vector of y-coordinates of the data points.
+ * @param z The second derivatives (z-coefficients) of the spline at the data points.
+ * @param t The x-coordinate at which to evaluate the spline.
+ * @return The interpolated y-coordinate at the given x-coordinate.
+ * @throws std::runtime_error If the input point is outside the range of the data.
+ */
+
+/**
+ * @fn std::vector<double> spline3_natural_eval(const std::vector<double> &x, const std::vector<double> &y, const std::deque<double> &z, const std::vector<double> &t)
+ * @brief Evaluates the natural cubic spline at multiple points.
+ * @param x The vector of x-coordinates of the data points.
+ * @param y The vector of y-coordinates of the data points.
+ * @param z The second derivatives (z-coefficients) of the spline at the data points.
+ * @param t The vector of x-coordinates at which to evaluate the spline.
+ * @return A vector of interpolated y-coordinates corresponding to the input x-coordinates.
+ */
 namespace ValLry{
     double normalCDF(double value)
     {
@@ -77,5 +122,77 @@ namespace ValLry{
             spl.push_back(spline3_natural_eval(x, y, z, t[i]));
         }
         return spl;
+    }
+
+    double tenorToYears(const std::string &tenor){
+        double years = 0.0;
+        size_t pos = 0;
+
+        while (pos < tenor.size()) {
+            size_t nextPos = pos;
+            while (nextPos < tenor.size() && isdigit(tenor[nextPos])) {
+            nextPos++;
+            }
+
+            if (nextPos == pos || nextPos >= tenor.size()) {
+            throw std::invalid_argument("Invalid tenor format");
+            }
+
+            int value = std::stoi(tenor.substr(pos, nextPos - pos));
+            char unit = tenor[nextPos];
+            pos = nextPos + 1;
+
+            switch (unit) {
+            case 'Y':
+                years += value;
+                break;
+            case 'M':
+                years += value / 12.0;
+                break;
+            case 'D':
+                years += value / 360.0;
+                break;
+            default:
+                throw std::invalid_argument("Invalid tenor unit");
+            }
+        }
+
+        return years;
+    }
+
+    std::vector<double> tenorToYears(const std::vector<std::string> &tenors){
+        std::vector<double> years_vector;
+        for(const auto& tenor : tenors){
+            years_vector.push_back(tenorToYears(tenor));
+        }
+        return years_vector;
+    }
+
+    std::string tenorToString(double tenor){
+        int years = static_cast<int>(tenor);
+        double months = (tenor - years) * 12.0;
+        int months_int = static_cast<int>(months);
+        double days = (months - months_int) * 30.0;
+        int days_int = static_cast<int>(days);
+
+        std::string result;
+        if(years > 0){
+            result += std::to_string(years) + "Y";
+        }
+        if(months_int > 0){
+            result += std::to_string(months_int) + "M";
+        }
+        if(days_int > 0){
+            result += std::to_string(days_int) + "D";
+        }
+        return result;
+    }
+
+    std::vector<std::string> tenorToString(const std::vector<double> &tenors){
+        std::vector<std::string> tenors_vector;
+        for(const auto& tenor : tenors){
+            tenors_vector.push_back(tenorToString(tenor));
+        }
+        return tenors_vector;
     }
 }

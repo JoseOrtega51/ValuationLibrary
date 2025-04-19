@@ -5,6 +5,7 @@
 #include <vector>
 #include <deque>
 #include <stdexcept>
+#include "python_utils.h"
 
 namespace ValLry{
     #ifndef M_SQRT1_2
@@ -22,6 +23,14 @@ namespace ValLry{
 
     //Evaluation of natural cubic spline in vector t
     std::vector<double> spline3_natural_eval(const std::vector<double> &x, const std::vector<double> &y, const std::deque<double> &z, const std::vector<double> &t);
+    
+    //Convert tenor string to double in years
+    double tenorToYears(const std::string &tenor);
+    std::vector<double> tenorToYears(const std::vector<std::string> &tenors);
+
+    //Convert years to tenor string
+    std::string tenorToString(double tenor);
+    std::vector<std::string> tenorToString(const std::vector<double> &tenors);
     
 }
 

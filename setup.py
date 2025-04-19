@@ -1,5 +1,10 @@
 from setuptools import setup, Extension
-import pybind11
+try:
+    import pybind11
+    pybind11_include = pybind11.get_include()
+except ImportError:
+    pybind11_include = ""
+
 
 # Lista de archivos .cpp que conforman el proyecto
 
@@ -29,7 +34,7 @@ ext_modules = [
     Extension(
         "ValuationLibrary",                   # Nombre del módulo
         source_files,                   # Lista de archivos fuente en C++
-        include_dirs=[pybind11.get_include(), "src"],  # Directorios de inclusión
+        include_dirs=[pybind11_include, "src"],  # Directorios de inclusión
         language="c++"
     ),
 ]
