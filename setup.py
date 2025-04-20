@@ -34,7 +34,7 @@ ext_modules = [
     Extension(
         "ValuationLibrary",                   # Nombre del módulo
         source_files,                   # Lista de archivos fuente en C++
-        include_dirs=[pybind11_include, "src"],  # Directorios de inclusión
+        include_dirs=[pybind11_include, "ValuationLibrary"],  # Directorios de inclusión
         language="c++"
     ),
 ]
