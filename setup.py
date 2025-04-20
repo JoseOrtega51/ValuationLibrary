@@ -46,4 +46,9 @@ setup(
     description="Una librería Python compilada en C++ con múltiples archivos",
     ext_modules=ext_modules,
     zip_safe=False,
+    install_requires=[
+        "pybind11",  # Required for building the C++ extension
+        "numpy",    # Required for numerical operations
+        "pytest",   # Required for running tests
+    ],
 )
