@@ -9,25 +9,25 @@ except ImportError:
 # Lista de archivos .cpp que conforman el proyecto
 
 source_files = [
-    "ValuationLibrary\main.cpp",
-    "ValuationLibrary\ValuationMathTools.cpp",
-    "ValuationLibrary\FinancialInstrument.cpp",
-    "ValuationLibrary\Portfolio.cpp",
-    "ValuationLibrary\python_utils.cpp",
-    "ValuationLibrary\IRCurve.cpp",
+    "ValuationLibrary/main.cpp",
+    "ValuationLibrary/ValuationMathTools.cpp",
+    "ValuationLibrary/FinancialInstrument.cpp",
+    "ValuationLibrary/Portfolio.cpp",
+    "ValuationLibrary/python_utils.cpp",
+    "ValuationLibrary/IRCurve.cpp",
 ]
 
 #source_files = [
-#     "ValuationLibrary\main.cpp",
-#     "ValuationLibrary\ValuationMathTools.cpp",
-#     "ValuationLibrary\FinancialInstrument.cpp",
-#     "ValuationLibrary\EuropeanOption.cpp",
-#     "ValuationLibrary\Portfolio.cpp",
-#     "ValuationLibrary\python_utils.cpp",
-#     "ValuationLibrary\MoneyMarket.cpp",
-#     "ValuationLibrary\MarketModel.cpp",
-#     "ValuationLibrary\IRCurve.cpp",
-#     "ValuationLibrary\FixedIncome.cpp"
+#     "ValuationLibrary/main.cpp",
+#     "ValuationLibrary/ValuationMathTools.cpp",
+#     "ValuationLibrary/FinancialInstrument.cpp",
+#     "ValuationLibrary/EuropeanOption.cpp",
+#     "ValuationLibrary/Portfolio.cpp",
+#     "ValuationLibrary/python_utils.cpp",
+#     "ValuationLibrary/MoneyMarket.cpp",
+#     "ValuationLibrary/MarketModel.cpp",
+#     "ValuationLibrary/IRCurve.cpp",
+#     "ValuationLibrary/FixedIncome.cpp"
 # ]
 
 ext_modules = [
