@@ -66,8 +66,8 @@ PYBIND11_MODULE(ValuationLibrary, m) {
         .def("getLabelList", &ValLry::portfolio::getLabelList);
 
     py::class_<ValLry::IRCurve, std::shared_ptr<ValLry::IRCurve>>(m, "IRCurve")
-        .def(py::init<const py::array_t<double>&,const py::array_t<double>&>(), py::arg("bucket"), py::arg("rates"), "Constructor with tenors as double")
-        .def(py::init<const std::vector<std::string>&,const py::array_t<double>&>(), py::arg("bucket"), py::arg("rates"), "Constructor with tenors as string")
+        .def(py::init<const py::array_t<double>&,const py::array_t<double>&, std::string>(), py::arg("bucket"), py::arg("rates"), py::arg("label"), "Constructor with tenors as double")
+        .def(py::init<const std::vector<std::string>&,const py::array_t<double>&, std::string>(), py::arg("bucket"), py::arg("rates"), py::arg("label"), "Constructor with tenors as string")
         .def("getValue",py::overload_cast<const py::array_t<double>&>( &ValLry::IRCurve::getValue), "Cubic spline of IR curve for a point")
         .def("getValue",py::overload_cast<double> (&ValLry::IRCurve::getValue),"Cubic spline of IR curve for a point");
     /**
@@ -84,5 +84,7 @@ PYBIND11_MODULE(ValuationLibrary, m) {
         .def("getMaturity", &ValLry::bond::getMaturity)
         .def("getYTM", &ValLry::bond::getYTM)
         .def("price", &ValLry::bond::price, "Price the bond")
-        .def("getNPV", &ValLry::bond::getNPV, "Get the NPV of the bond");
+        .def("getNPV", &ValLry::bond::getNPV, "Get the NPV of the bond")
+        .def("computeIRDelta", &ValLry::bond::computeIRDelta, "Compute the IR delta of the bond")
+        .def("getIRDelta", &ValLry::bond::getIRDelta, "Get the IR delta of the bond");
 }

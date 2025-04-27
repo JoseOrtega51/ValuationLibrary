@@ -16,6 +16,8 @@ namespace ValLry{
 
             std::vector<double> _coupon_dates;
             std::vector<double> _coupon_yields;
+
+            std::map<std::string, double> _IR_Delta; //Delta of the bond with respect to the IR curve
         
         public:
             //ZCB constructor
@@ -27,9 +29,16 @@ namespace ValLry{
             //Price the instrument according to its configuration. It needs to be defined in each inherited class.
             double price() override;
 
+            //compute the delta of the bond with respect to the IR curve
+            void computeIRDelta();
+
             double getNominal();
             double getMaturity();
             double getYTM();
+
+            std::map<std::string, double> getIRDelta();
+
+            
 
     };
 

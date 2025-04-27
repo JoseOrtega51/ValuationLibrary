@@ -4,6 +4,7 @@
 #include "python_utils.h"
 #include "IRCurve.h"
 #include "ValuationMathTools.h"
+#include "RiskFactor.h"
 
 namespace ValLry{
 
@@ -16,13 +17,13 @@ namespace ValLry{
         private:
 
             double _MTM; //Market Price
-            double _NPV; //Computed price
             bool _base_instrument; //True if the instrument is a base instrument (e.g. stock, bond, option, etc.)   
-            
 
         protected:
+            double _NPV; //Computed price
             Position _BookPosition;  //Short or Long
             bool _isPositionDefined = false;
+            std::vector<RiskFactor> _risk_factors; //Risk factors associated with the instrument
 
         public:
             //Price the instrument according to its configuration. It needs to be defined in each inherited class.
@@ -35,10 +36,12 @@ namespace ValLry{
             // virtual py::array_t<double> delta(const py::array_t<double> t, const double S)   = 0;
             // virtual py::array_t<double> delta(const double t, const py::array_t<double> S)   = 0;
 
-            
-
+        
 
             //getters
+
+            //get risk factors associated with the instrument
+            std::vector<RiskFactor> getRiskFactors() const; 
 
             //get value of MTM
             virtual double getMTM() const;

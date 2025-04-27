@@ -6,7 +6,7 @@ def test_rate_matches_benchmark():
 
     buckets = np.array([0.5, 1., 2., 3., 5., 10.])
     rates = np.array([0.02, 0.025, 0.028, 0.029, 0.03, 0.032])
-    curve = ValLry.IRCurve(buckets, rates)
+    curve = ValLry.IRCurve(buckets, rates, "IRCurve")
 
     ############################# ZERO COUPON BOND #############################
 

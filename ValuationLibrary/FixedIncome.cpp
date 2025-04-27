@@ -33,6 +33,38 @@ namespace ValLry{
         }
     }
 
+    void bond::computeIRDelta(){
+        //Compute the delta of the bond with respect to the IR curve
+        //This is a simple finite difference approximation
+        double epsilon = 0.01; //1% change in the curve
+
+        std::vector<RiskFactor> risk_factors_curve = _curve.getRiskFactors();
+        std::vector<double> original_rates;
+        std::vector<std::string> original_tenors;
+        for (const auto &rf : risk_factors_curve) {
+            double rate = rf.getRiskFactorValue<double>();
+            std::string tenor = rf.getRiskFactorName();
+            original_rates.push_back(rate);
+            original_tenors.push_back(tenor);
+        }
+        IRCurve original_curve = _curve; // Store the original curve
+
+        for (size_t i = 0; i < risk_factors_curve.size(); ++i) {
+            std::vector<double> bumped_rates = original_rates;
+            bumped_rates[i] += epsilon * bumped_rates[i]; // Bump the rate by 1%
+            IRCurve bumped_curve = IRCurve(original_tenors, bumped_rates, "IR_Delta_Bumped");
+            _curve = bumped_curve; // Set the bumped curve
+            double bumped_price = this->price(); // Compute the price with the bumped curve
+            _IR_Delta[original_tenors[i]] = (bumped_price - _NPV); // Compute the delta
+        }
+        _curve = original_curve; // Restore the original curve
+
+    }
+
+    std::map<std::string, double> bond::getIRDelta(){
+        return _IR_Delta;
+    }
+
     //ZCB constructor
     bond::bond(double maturity, double nominal, IRCurve &curve):    
                 _is_ZCB(true), _maturity(maturity), _nominal(nominal), _curve(curve){
@@ -40,6 +72,12 @@ namespace ValLry{
                     _YTM = curve.getValue(maturity);
                     //compute price
                     this->setNPV(this->price());
+
+                    // Set the risk factor for the bond
+                    RiskFactor IRCurve_RF;
+                    IRCurve_RF.setRiskFactor("IRCurve", _curve.getValue(maturity));
+                    _risk_factors.push_back(IRCurve_RF);
+                    
                 }
 
     //Bond constructor
@@ -79,6 +117,13 @@ namespace ValLry{
 
                     // Set the YTM
                     _YTM = ytm_guess;
+
+                    // Set the risk factor for the bond
+
+                    RiskFactor IRCurve_RF;
+                    IRCurve_RF.setRiskFactor("IRCurve", _curve.getValue(maturity));
+                    _risk_factors.push_back(IRCurve_RF);
                     
                 }
+
 }

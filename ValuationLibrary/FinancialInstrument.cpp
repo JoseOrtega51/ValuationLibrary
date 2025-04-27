@@ -26,4 +26,8 @@ namespace ValLry{
         _BookPosition = BookPosition;
         _isPositionDefined = true;
     }
+
+    std::vector<RiskFactor> FinancialInstrument::getRiskFactors() const {
+        return _risk_factors;
+    }
 }
