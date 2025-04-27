@@ -1,4 +1,5 @@
 // src/main.cpp
+#include "FinancialInstrument.h"
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 //#include "operations.h"
@@ -6,7 +7,7 @@
 #include "Portfolio.h"
 //#include "MarketModel.h"
 #include "IRCurve.h"
-//#include "FixedIncome.h"
+#include "FixedIncome.h"
 
 namespace py = pybind11;
 
@@ -52,9 +53,9 @@ PYBIND11_MODULE(ValuationLibrary, m) {
     //Portfolio
      py::class_<ValLry::portfolio, ValLry::FinancialInstrument, std::shared_ptr<ValLry::portfolio>>(m, "portfolio")
         .def(py::init<>())
-        .def("price", py::overload_cast<const double, const double>(&ValLry::portfolio::price), "price function that takes double as t and S")
-        .def("price", py::overload_cast<const py::array_t<double>, const double>(&ValLry::portfolio::price),"price fuction that takes numpy array as t")
-        .def("price", py::overload_cast<const double, const py::array_t<double>>(&ValLry::portfolio::price),"price fuction that takes numpy array as S")
+        .def("price", &ValLry::portfolio::price, "price function")
+        // .def("price", py::overload_cast<const py::array_t<double>, const double>(&ValLry::portfolio::price),"price fuction that takes numpy array as t")
+        // .def("price", py::overload_cast<const double, const py::array_t<double>>(&ValLry::portfolio::price),"price fuction that takes numpy array as S")
         // .def("delta", py::overload_cast<const double, const double>(&ValLry::portfolio::delta), "delta function that takes double as t and S")
         // .def("delta", py::overload_cast<const py::array_t<double>, const double>(&ValLry::portfolio::delta),"delta fuction that takes numpy array as t")
         // .def("delta", py::overload_cast<const double, const py::array_t<double>>(&ValLry::portfolio::delta),"delta fuction that takes numpy array as S")
@@ -76,4 +77,12 @@ PYBIND11_MODULE(ValuationLibrary, m) {
         .def("eraseIRCurve", &ValLry::MarketModel::eraseIRCurve)
         .def("getIRCurvesList", &ValLry::MarketModel::getIRCurvesList);
     */
+   py::class_<ValLry::bond, ValLry::FinancialInstrument, std::shared_ptr<ValLry::bond>>(m, "bond")
+        .def(py::init<double, double, const std::vector<double>&, const std::vector<double>&, ValLry::IRCurve&>(), py::arg("maturity"), py::arg("nominal"), py::arg("coupon_dates"), py::arg("coupon_yields"), py::arg("curve"), "Constructor for a bond with coupons")
+        .def(py::init<double, double, ValLry::IRCurve&>(), py::arg("maturity"), py::arg("nominal"), py::arg("curve"), "Constructor for a zero coupon bond")
+        .def("getNominal", &ValLry::bond::getNominal)
+        .def("getMaturity", &ValLry::bond::getMaturity)
+        .def("getYTM", &ValLry::bond::getYTM)
+        .def("price", &ValLry::bond::price, "Price the bond")
+        .def("getNPV", &ValLry::bond::getNPV, "Get the NPV of the bond");
 }

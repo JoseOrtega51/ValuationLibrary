@@ -15,6 +15,7 @@ source_files = [
     "ValuationLibrary/Portfolio.cpp",
     "ValuationLibrary/python_utils.cpp",
     "ValuationLibrary/IRCurve.cpp",
+    "ValuationLibrary/FixedIncome.cpp",
 ]
 
 #source_files = [

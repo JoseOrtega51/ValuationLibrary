@@ -2,6 +2,8 @@
 #define FINANCIAL_INSTRUMENT_H
 
 #include "python_utils.h"
+#include "IRCurve.h"
+#include "ValuationMathTools.h"
 
 namespace ValLry{
 
@@ -24,9 +26,9 @@ namespace ValLry{
 
         public:
             //Price the instrument according to its configuration. It needs to be defined in each inherited class.
-            virtual double price(const double t, const double S)                = 0;
-            virtual py::array_t<double> price(const py::array_t<double> t, const double S)   = 0;
-            virtual py::array_t<double> price(const double t, const py::array_t<double> S)   = 0;
+            virtual double price()                = 0;
+            //virtual py::array_t<double> price(const py::array_t<double> t, const double S)   = 0;
+            //virtual py::array_t<double> price(const double t, const py::array_t<double> S)   = 0;
 
             // //Price the instrument according to its configuration. It needs to be defined in each inherited class.
             // virtual double delta(const double t, const double S)                = 0;
@@ -39,13 +41,13 @@ namespace ValLry{
             //getters
 
             //get value of MTM
-            double getMTM() const;
+            virtual double getMTM() const;
 
             //get value of NPV   
-            double getNPV() const;   
+            virtual double getNPV() const;   
 
             //get value of BookPosition
-            void getBookPosition(Position &BookPosition);  
+            virtual void getBookPosition(Position &BookPosition);  
 
             //setters
 

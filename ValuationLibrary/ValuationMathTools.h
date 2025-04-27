@@ -31,7 +31,24 @@ namespace ValLry{
     //Convert years to tenor string
     std::string tenorToString(double tenor);
     std::vector<std::string> tenorToString(const std::vector<double> &tenors);
-    
+
+    //Newton-Raphson method for root finding
+    template <typename Function, typename Derivative>
+    double newtonRaphson(Function f, Derivative f_prime, double x0, double tol = 1e-6, int max_iter = 1000){
+        double x = x0;
+        for(int i = 0; i < max_iter; i++){
+            double fx = f(x);
+            if(fabs(fx) < tol){
+                return x;
+            }
+            double fpx = f_prime(x);
+            if(fabs(fpx) < tol){
+                throw std::runtime_error("ValuationMathTools::newtonRaphson: Derivative is too small, no convergence.");
+            }
+            x -= fx / fpx;
+        }
+        throw std::runtime_error("ValuationMathTools::newtonRaphson: Maximum iterations reached, no convergence.");
+    }
 }
 
 #endif

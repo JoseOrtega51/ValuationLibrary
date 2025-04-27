@@ -21,9 +21,9 @@ namespace ValLry {
         
         public:
             //Compute price of whole portfolio
-            double price(const double t, const double S);
-            py::array_t<double> price(const py::array_t<double> t, const double S);
-            py::array_t<double> price(const double t, const py::array_t<double> S);
+            double price();
+            // py::array_t<double> price(const py::array_t<double> t, const double S);
+            // py::array_t<double> price(const double t, const py::array_t<double> S);
 
             //Compute the delta of whole portfolio
             // double delta(const double t, const double S);

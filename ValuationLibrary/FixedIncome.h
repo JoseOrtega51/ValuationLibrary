@@ -5,11 +5,12 @@
 
 namespace ValLry{
 
-    class bond : FinancialInstrument{
+    class bond : public FinancialInstrument{
         private:
             double _nominal;    //Face value
             double _maturity;   //Maturity as fraction of years
             double _YTM;        // Yield to maturity (The yield that makes the sum of the discounted cash flows = Market price)
+            IRCurve _curve;     //Interest rate curve used for pricing
 
             const bool _is_ZCB;       //Is it a Zero Coupon Bond? Set value in constructor!
 
@@ -18,14 +19,17 @@ namespace ValLry{
         
         public:
             //ZCB constructor
-            bond(double maturity, double nominal);
+            bond(double maturity, double nominal, IRCurve &curve);
 
             //Bond constructor
-            bond(double maturity, double nominal, const std::vector<double> &coupon_dates, const std::vector<double> &coupon_yields);
+            bond(double maturity, double nominal, const std::vector<double> &coupon_dates, const std::vector<double> &coupon_yields, IRCurve &curve);
+
+            //Price the instrument according to its configuration. It needs to be defined in each inherited class.
+            double price() override;
 
             double getNominal();
             double getMaturity();
-            double getYield();
+            double getYTM();
 
     };
 
