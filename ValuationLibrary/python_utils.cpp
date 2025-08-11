@@ -33,4 +33,30 @@ py::array_t<double> vector2numpy(std::shared_ptr<std::vector<double>> output_vec
     return result;
 }
 
+std::deque<double> numpy2deque(py::array_t<double> input_array){
+    // Solicitar el buffer del array de entrada
+    auto buf = input_array.request();
+    if (buf.ndim != 1) {
+        throw std::runtime_error("Array dimension should be 1");
+    }
+
+    // Convertir los datos a un std::deque<double>
+    std::deque<double> input_deque(
+        static_cast<double*>(buf.ptr), 
+        static_cast<double*>(buf.ptr) + buf.size
+    );  
+    return input_deque;
+
+}
+py::array_t<double> deque2numpy(const std::deque<double> &input_deque){
+    // Crear un array NumPy desde el std::deque
+    auto result = py::array_t<double>(input_deque.size());
+    auto result_buf = result.request();
+    double* result_ptr = static_cast<double*>(result_buf.ptr);
+    // Copiar los datos desde el std::deque al array NumPy
+    std::copy(input_deque.begin(), input_deque.end(), result_ptr);
+
+    return result;
+}
+
 } // namespace ValLry

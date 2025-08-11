@@ -13,7 +13,10 @@ namespace ValLry{
     #endif
 
     double normalCDF(double value);
-    std::deque<double> trisol(int k, const std::vector<double> &a, const std::vector<double> &c, const std::vector<double> &b);
+
+    py::array_t<double> trisol(int k, const py::array_t<double> &a, const py::array_t<double> &b, const py::array_t<double> &c, const py::array_t<double> &d);
+
+    std::deque<double> trisol(int k, const std::vector<double> &a, const std::deque<double> &b, const std::deque<double> &c, const std::vector<double> &d);
 
     //natural cubic spline second derivatives in nodes
     std::deque<double> spline3_natural_coefs(const std::vector<double> &x, const std::vector<double> &y);

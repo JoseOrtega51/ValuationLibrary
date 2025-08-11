@@ -51,28 +51,50 @@ namespace ValLry{
         return 0.5 * erfc(-value * M_SQRT1_2);
     }
 
-    std::deque<double> trisol(int k, const std::vector<double> &a, const std::deque<double> &c, const std::vector<double> &b){
+
+
+    std::deque<double> trisol(int k, const std::vector<double> &a, const std::deque<double> &b, const std::deque<double> &c, const std::vector<double> &d){
         std::vector<double> l;
         std::vector<double> u;
         std::deque<double> x;
 
+        //Check if the input sizes are correct
+        if (a.size() != k + 1 || b.size() != k || c.size() != k || d.size() != k + 1) {
+            throw std::invalid_argument("Input sizes do not match the expected dimensions.");
+        }
+
         u.push_back(a[0]);
         for(int i = 0; i<k; i++){
-            l.push_back(c[i]/u[i]);
+            l.push_back(b[i]/u[i]);
             u.push_back(a[i+1] - l[i] * c[i]);
         }
 
-        x.push_back(b[0]);
+        x.push_back(d[0]);
         for(int i = 1; i<k+1; i++){
-            x.push_back(b[i] - l[i-1] * x[i-1]);
+            x.push_back(d[i] - l[i-1] * x[i-1]);
         }
         x[k] = x[k] / u[k];
 
         for(int i = k-1; i>-1; i--){
-            x[i]=x[i]/u[i]-l[i]*x[i+1];
+            x[i]=x[i]/u[i]-c[i]/u[i]*x[i+1];
         }
         return x;
     }   
+
+    py::array_t<double> trisol(int k, const py::array_t<double> &a, const py::array_t<double> &b, const py::array_t<double> &c, const py::array_t<double> &d){
+        // Convert input arrays to vectors
+        std::vector<double> a_vec(a.data(), a.data() + a.size());
+        std::deque<double> b_deque(b.data(), b.data() + b.size());
+        std::deque<double> c_deque(c.data(), c.data() + c.size());
+        std::vector<double> d_vec(d.data(), d.data() + d.size());
+
+        // Call the existing trisol function
+        std::deque<double> x_deque = trisol(k, a_vec, b_deque, c_deque, d_vec);
+
+        // Convert the result back to a NumPy array
+        return deque2numpy(x_deque);
+    }
+
 
     std::deque<double> spline3_natural_coefs(const std::vector<double> &x, const std::vector<double> &y){
 
@@ -95,7 +117,7 @@ namespace ValLry{
         }
         h.pop_front();
         h.pop_back();
-        z = trisol( n - 2, a, h, b);
+        z = trisol( n - 2, a, h, h, b);
         z.push_back(0.);
         z.push_front(0.);
 

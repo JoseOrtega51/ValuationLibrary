@@ -24,7 +24,7 @@ namespace ValLry{
     IRCurve::IRCurve(const std::vector<std::string> &tenors, const std::vector<double> &rates, const std::string &label){
         _tenors_str = tenors;
         _tenors_num = tenorToYears(_tenors_str);
-        _rates = rates;
+        _rates = rates  ;
         _spline3_coefs = spline3_natural_coefs(_tenors_num, _rates);
         _label = label;
         _setRiskFactors();

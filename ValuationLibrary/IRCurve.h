@@ -8,15 +8,38 @@
 #include "ValuationMathTools.h"
 #include "RiskFactor.h"
 
-/**
- * @class IRCurve
- * @brief Represents an interest rate curve with functionality for interpolation and evaluation.
- *
- * The IRCurve class provides methods to store and evaluate interest rate curves
- * using given tenors and rates. It also supports spline interpolation for smooth
- * curve fitting.
- */
+
 namespace ValLry{
+
+    /**
+     * @class IRCurve
+     * @brief Represents an interest rate curve with associated risk factors, tenors, and rates.
+     *
+     * The IRCurve class provides functionality to construct and query an interest rate curve,
+     * supporting multiple input formats for tenors and rates, and associating risk factors
+     * with the curve. It also supports value interpolation and retrieval of risk factors.
+     *
+     * @private
+     * - std::vector<RiskFactor> _risk_factors: Risk factors associated with the curve.
+     * - void _setRiskFactors(): Helper to set risk factors for the curve.
+     * - std::string _label: Label identifying the curve.
+     * - std::vector<double> _tenors_num: Numeric representation of tenors.
+     * - std::vector<std::string> _tenors_str: String representation of tenors.
+     * - std::vector<double> _rates: Interest rates corresponding to tenors.
+     * - std::deque<double> _spline3_coefs: Spline coefficients for interpolation.
+     *
+     * @public
+     * - IRCurve(): Default constructor.
+     * - IRCurve(const py::array_t<double>& tenors, const py::array_t<double>& rates, const std::string& label): 
+     *      Constructs curve from numeric tenors and rates.
+     * - IRCurve(const std::vector<std::string>& tenors, const py::array_t<double>& rates, const std::string& label): 
+     *      Constructs curve from string tenors and rates.
+     * - IRCurve(const std::vector<std::string>& tenors, const std::vector<double>& rates, const std::string& label): 
+     *      Constructs curve from string tenors and rates.
+     * - double getValue(double t): Returns interpolated rate at time t.
+     * - py::array_t<double> getValue(const py::array_t<double>& t): Returns interpolated rates for array of times.
+     * - std::vector<RiskFactor> getRiskFactors() const: Retrieves associated risk factors.
+     */
 
      class IRCurve {
         private:

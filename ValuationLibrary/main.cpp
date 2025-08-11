@@ -2,6 +2,8 @@
 #include "FinancialInstrument.h"
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
+#include <pybind11/numpy.h>
+#include "ValuationMathTools.h"
 //#include "operations.h"
 //#include "EuropeanOption.h"
 #include "Portfolio.h"
@@ -87,4 +89,19 @@ PYBIND11_MODULE(ValuationLibrary, m) {
         .def("getNPV", &ValLry::bond::getNPV, "Get the NPV of the bond")
         .def("computeIRDelta", &ValLry::bond::computeIRDelta, "Compute the IR delta of the bond")
         .def("getIRDelta", &ValLry::bond::getIRDelta, "Get the IR delta of the bond");
+
+    // ValuationMathTools
+    py::module_ math = m.def_submodule("math", "Math tools submodule");
+    
+    math.def("normalCDF", &ValLry::normalCDF, "Compute the cumulative distribution function of the standard normal distribution");
+    math.def("trisol",
+        py::overload_cast<int, const py::array_t<double>&, const py::array_t<double>&, const py::array_t<double>&, const py::array_t<double>&>(&ValLry::trisol),
+        "Solve a tridiagonal system of equations", 
+        py::arg("k"), 
+        py::arg("a"), 
+        py::arg("b"), 
+        py::arg("c"), 
+        py::arg("d"));
+    math.def("spline3_natural_coefs", &ValLry::spline3_natural_coefs, "Compute the second derivatives of a natural cubic spline in nodes", py::arg("x"), py::arg("y"));
+    
 }
