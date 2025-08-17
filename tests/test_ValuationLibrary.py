@@ -266,6 +266,48 @@ def test_math_tools():
         ref_df = pd.read_csv(tri_ref_path)
         assert ref_df.shape == result_df.shape, "Shape mismatch in trisol results"
         assert np.allclose(ref_df['solution'].values, result_df['solution'].values), "Trisol solutions don't match"
+        
+    # Test Cholesky decomposition
+    # Create a symmetric positive definite matrix
+    n = 3
+    # Start with a random matrix
+    rng = np.random.RandomState(42)  # Use fixed seed for reproducibility
+    A_temp = rng.rand(n, n)
+    # Make it symmetric positive definite by multiplying with its transpose and adding identity
+    A = A_temp.dot(A_temp.T) + np.eye(n)
+    
+    # Compute Cholesky decomposition
+    L = math.choleskyDecomposition(A)
+    assert isinstance(L, np.ndarray)
+    assert L.shape == (n, n)
+    
+    # Verify the decomposition: A should be approximately equal to L * L^T
+    L_transpose = L.T
+    A_reconstructed = L.dot(L_transpose)
+    assert np.allclose(A, A_reconstructed, rtol=1e-10, atol=1e-10)
+    
+    # Check that L is lower triangular (all elements above diagonal are zero)
+    for i in range(n):
+        for j in range(i+1, n):
+            assert abs(L[i, j]) < 1e-10
+    
+    # Save Cholesky results
+    chol_ref_path = os.path.join('tests', 'reference', 'cholesky.csv')
+    
+    # Reshape for dataframe
+    chol_df = pd.DataFrame(L)
+    
+    # If reference file doesn't exist, create it
+    if not os.path.exists(chol_ref_path):
+        print(f"Creating reference file: {chol_ref_path}")
+        os.makedirs(os.path.dirname(chol_ref_path), exist_ok=True)
+        chol_df.to_csv(chol_ref_path, index=False)
+    else:
+        # Load reference data and compare
+        ref_df = pd.read_csv(chol_ref_path)
+        ref_df.columns = chol_df.columns  # Ensure columns match for comparison
+        assert ref_df.shape == chol_df.shape, "Shape mismatch in Cholesky results"
+        pd.testing.assert_frame_equal(ref_df, chol_df, check_dtype=False, check_index_type=False, check_column_type = False)
 
 if __name__ == "__main__":
     pytest.main([__file__])

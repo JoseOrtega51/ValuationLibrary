@@ -217,6 +217,99 @@ namespace ValLry{
         }
         return tenors_vector;
     }
+    
+    std::vector<std::vector<double>> choleskyDecomposition(const std::vector<std::vector<double>>& A) {
+        size_t n = A.size();
+        
+        // Check if matrix is square
+        for (const auto& row : A) {
+            if (row.size() != n) {
+                throw std::invalid_argument("Matrix must be square for Cholesky decomposition");
+            }
+        }
+        
+        // Check if matrix is symmetric
+        for (size_t i = 0; i < n; ++i) {
+            for (size_t j = 0; j < i; ++j) {
+                if (std::fabs(A[i][j] - A[j][i]) > 1e-10) {
+                    throw std::invalid_argument("Matrix must be symmetric for Cholesky decomposition");
+                }
+            }
+        }
 
+        // Initialize the result matrix L with zeros
+        std::vector<std::vector<double>> L(n, std::vector<double>(n, 0.0));
+        
+        // Compute the Cholesky decomposition
+        for (size_t i = 0; i < n; ++i) {
+            // Diagonal elements: l_{ii} = sqrt(a_{ii} - sum(l_{ik}^2)) for k=1 to i-1
+            double sum = 0.0;
+            for (size_t k = 0; k < i; ++k) {
+                sum += L[i][k] * L[i][k];
+            }
+            
+            double diag_value = A[i][i] - sum;
+            
+            // Check if matrix is positive definite
+            if (diag_value <= 0) {
+                throw std::runtime_error("Matrix is not positive definite");
+            }
+            
+            L[i][i] = std::sqrt(diag_value);
+            
+            // Off-diagonal elements: l_{ji} = (a_{ji} - sum(l_{jk}*l_{ik})) / l_{ii} for j > i
+            for (size_t j = i + 1; j < n; ++j) {
+                sum = 0.0;
+                for (size_t k = 0; k < i; ++k) {
+                    sum += L[j][k] * L[i][k];
+                }
+                L[j][i] = (A[j][i] - sum) / L[i][i];
+            }
+        }
+
+        return L;
+    }
+    
+    py::array_t<double> choleskyDecomposition(const py::array_t<double>& A) {
+        // Check input dimensions
+        py::buffer_info buf_info = A.request();
+        if (buf_info.ndim != 2) {
+            throw std::runtime_error("Input must be a 2-dimensional array");
+        }
+        
+        if (buf_info.shape[0] != buf_info.shape[1]) {
+            throw std::runtime_error("Input must be a square matrix");
+        }
+        
+        size_t n = buf_info.shape[0];
+        
+        // Convert numpy array to vector of vectors
+        std::vector<std::vector<double>> matrix(n, std::vector<double>(n));
+        double* ptr = static_cast<double*>(buf_info.ptr);
+        
+        for (size_t i = 0; i < n; ++i) {
+            for (size_t j = 0; j < n; ++j) {
+                // Assuming row-major storage
+                matrix[i][j] = ptr[i * n + j];
+            }
+        }
+        
+        // Perform Cholesky decomposition
+        std::vector<std::vector<double>> L = choleskyDecomposition(matrix);
+        
+        // Create output array
+        py::array_t<double> result = py::array_t<double>({n, n});
+        py::buffer_info result_buf = result.request();
+        double* result_ptr = static_cast<double*>(result_buf.ptr);
+        
+        // Fill output array
+        for (size_t i = 0; i < n; ++i) {
+            for (size_t j = 0; j < n; ++j) {
+                result_ptr[i * n + j] = L[i][j];
+            }
+        }
+        
+        return result;
+    }
     
 }

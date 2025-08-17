@@ -5,7 +5,9 @@
 #include <vector>
 #include <deque>
 #include <stdexcept>
+#include <cmath>
 #include "python_utils.h"
+#include <iostream>
 
 namespace ValLry{
     #ifndef M_SQRT1_2
@@ -52,6 +54,12 @@ namespace ValLry{
         }
         throw std::runtime_error("ValuationMathTools::newtonRaphson: Maximum iterations reached, no convergence.");
     }
+    
+    // Cholesky decomposition of a symmetric positive definite matrix
+    std::vector<std::vector<double>> choleskyDecomposition(const std::vector<std::vector<double>>& A);
+    
+    // Python wrapper for Cholesky decomposition
+    py::array_t<double> choleskyDecomposition(const py::array_t<double>& A);
 }
 
 #endif

@@ -103,5 +103,9 @@ PYBIND11_MODULE(ValuationLibrary, m) {
         py::arg("c"), 
         py::arg("d"));
     math.def("spline3_natural_coefs", &ValLry::spline3_natural_coefs, "Compute the second derivatives of a natural cubic spline in nodes", py::arg("x"), py::arg("y"));
+    math.def("choleskyDecomposition", 
+        py::overload_cast<const py::array_t<double>&>(&ValLry::choleskyDecomposition),
+        "Compute the Cholesky decomposition of a symmetric positive definite matrix",
+        py::arg("A"));
     
 }
